@@ -1,0 +1,7 @@
+/home/maks/RiderProjects/Generics/Generics/bin/Debug/Generics.exe
+/home/maks/RiderProjects/Generics/Generics/bin/Debug/Generics.pdb
+/home/maks/RiderProjects/Generics/Generics/obj/Debug/Generics.csproj.AssemblyReference.cache
+/home/maks/RiderProjects/Generics/Generics/obj/Debug/Generics.csproj.CoreCompileInputs.cache
+/home/maks/RiderProjects/Generics/Generics/obj/Debug/Generics.exe
+/home/maks/RiderProjects/Generics/Generics/obj/Debug/Generics.pdb
+/home/maks/RiderProjects/Generics/Generics/bin/Debug/Generics.exe.config
