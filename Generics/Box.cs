@@ -32,7 +32,10 @@ namespace Generics
 
         public void ToTheBox(T plant)
         {
-            _plants.Add(plant);
+            if (Count() < 10)
+                _plants.Add(plant);
+            else
+                throw new BoxOverException(Config.ERRORTEXT);
         }
 
         public void Sell()

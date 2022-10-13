@@ -41,6 +41,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Box.cs" />
+        <Compile Include="BoxOverException.cs" />
         <Compile Include="Config.cs" />
         <Compile Include="Farm.cs" />
         <Compile Include="Field.cs" />

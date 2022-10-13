@@ -47,13 +47,22 @@ namespace Generics
     
         public int SelectedFieldStatus(int x, int y)
         {
-            var selectedField = Fields[x, y];
-            Console.SetCursorPosition(120, 2);
+            try
+            {
+                var selectedField = Fields[x, y];
+                Console.SetCursorPosition(120, 2);
 
-            if (selectedField.IsEmpty())
-                return 0;
-            if (selectedField.IsReady())
-                return 2;
+                if (selectedField.IsEmpty())
+                    return 0;
+                if (selectedField.IsReady())
+                    return 2;
+
+                return 1;
+            }
+            catch (Exception e)
+            {
+                _logger.OnNotify(e.Message);
+            }
 
             return 1;
         }
@@ -89,25 +98,31 @@ namespace Generics
         public void CollectField(int x, int y)
         {
             var selectedField = Fields[x, y];
+            bool check = false;
 
             var plant = selectedField.WhatPlant();
 
             if (plant == typeof(Fruit) && Player.FruitBox.Count() < 10)
             {
                 Player.FruitBox.ToTheBox((Fruit)selectedField.CollectHarvest());
+                check = true;
             }
             else if (plant == typeof(Vegetable) && Player.VegetableBox.Count() < 10)
             {
                 Player.VegetableBox.ToTheBox((Vegetable)selectedField.CollectHarvest());
+                check = true;
             }
             else if (plant == typeof(Berry) && Player.BerryBox.Count() < 10)
             {
                 Player.BerryBox.ToTheBox((Berry)selectedField.CollectHarvest());
+                check = true;
             }
-            
-            _logger.OnNotify($"Player collect {selectedField.ToString()}");
-            
-            selectedField.ToEmpty();
+
+            if (check)
+            {
+                _logger.OnNotify($"Player collect {selectedField.ToString()}");
+                selectedField.ToEmpty();
+            }
         }
 
         public void ToConsole()

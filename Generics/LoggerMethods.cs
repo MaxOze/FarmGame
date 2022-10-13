@@ -5,13 +5,13 @@ namespace Generics
 {
     public class LoggerMethods
     {
-        static int pos = 2;
+        static int _pos = 2;
 
         public static void LogInFile(string message)
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter("/home/maks/Рабочий стол/Учеба/5 семестр (.NET)/log.txt", true))
+                using (StreamWriter writer = new StreamWriter(Config.LOGPATH, true))
                 {
                     writer.WriteLine(message);
                     writer.Close();
@@ -25,10 +25,10 @@ namespace Generics
 
         public static void LogInConsole(string message)
         {
-            if (pos > 55)
+            if (_pos > 55)
             {
-                pos = 2;
-                Console.SetCursorPosition(3, pos);
+                _pos = 2;
+                Console.SetCursorPosition(3, _pos);
                 Console.Write("                                                                    \n" +
                               "//                                                                    \n" +
                               "//                                                                    \n" +
@@ -85,9 +85,9 @@ namespace Generics
                               "//                                                                    \n");
             }
 
-            Console.SetCursorPosition(3,pos);
+            Console.SetCursorPosition(3,_pos);
             Console.WriteLine(message);
-            pos++;
+            _pos++;
         }
     }
 }

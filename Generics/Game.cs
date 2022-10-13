@@ -341,7 +341,14 @@ namespace Generics
                                         switch (choice)
                                         {
                                             case 1:
-                                                _farm.CollectField(_farm.Player.X, _farm.Player.Y);
+                                                try
+                                                {
+                                                    _farm.CollectField(_farm.Player.X, _farm.Player.Y);
+                                                }
+                                                catch (BoxOverException e)
+                                                {
+                                                    _logger.OnNotify(e.Message);
+                                                }
                                                 Clear();
                                                 close = false;
                                                 close1 = false;
