@@ -11,7 +11,7 @@ namespace Generics
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter(Config.LOGPATH, true))
+                using (StreamWriter writer = new StreamWriter(Config.LOG_PATH, true))
                 {
                     writer.WriteLine(message);
                     writer.Close();
