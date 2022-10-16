@@ -18,6 +18,7 @@ namespace Generics
         public void StartGame()
         {
             Console.Title = "Farm game";
+            LoadGame();
             Map.ToConsole();
             _logger.OnNotify($"Game started");
             _logger.Notify += LoggerMethods.LogInConsole;
@@ -87,6 +88,7 @@ namespace Generics
                         break;
                     case ConsoleKey.Q:
                         end = false;
+                        SaveGame();
                         _logger.OnNotify($"Game closed\n");
                         break;
                 }
@@ -623,6 +625,79 @@ namespace Generics
             {
                 Console.SetCursorPosition(196, 24);
                 Console.Write("Нажмите [E] чтобы начать следующий день");
+            }
+        }
+
+        private void LoadGame()
+        {
+            Console.SetCursorPosition(105,22);
+            Console.Write("[1] Загрузить коробки из JSON");
+            Console.SetCursorPosition(105,24);
+            Console.Write("[2] Загрузить коробки из XML");
+            Console.SetCursorPosition(105,26);
+            Console.Write("[3] Загрузить игру из XML");
+            Console.SetCursorPosition(110,28);
+            Console.Write("[4] Новая игра");
+
+
+            while (true)
+            {
+                var key = Console.ReadKey(true).Key;
+                switch (key)
+                {
+                    case ConsoleKey.D1:
+                        _farm.Player.LoadPlayer(1);
+                        _logger.OnNotify($"Boxes loaded from JSON!");
+                        return;
+                    case ConsoleKey.D2:
+                        _farm.Player.LoadPlayer(2);
+                        _logger.OnNotify($"Boxes loaded from XML!");
+                        return;
+                    case ConsoleKey.D3:
+                        _farm.Player.LoadPlayer(3);
+                        _logger.OnNotify($"Game loaded from XML!");
+                        return;
+                    case ConsoleKey.D4:
+                        _logger.OnNotify($"New game!");
+                        return;
+                }
+            }
+        }
+
+        private void SaveGame()
+        {
+            Console.Clear();
+            Console.SetCursorPosition(105,22);
+            Console.Write("[1] Сохранить коробки в JSON");
+            Console.SetCursorPosition(105,24);
+            Console.Write("[2] Сохранить коробки в XML");
+            Console.SetCursorPosition(105,26);
+            Console.Write("[3] Сохранить игру в XML");
+            Console.SetCursorPosition(106,28);
+            Console.Write("[4] Не сохранять игру");
+
+
+            while (true)
+            {
+                var key = Console.ReadKey(true).Key;
+                switch (key)
+                {
+                    case ConsoleKey.D1:
+                        _farm.Player.SavePlayer(1);
+                        _logger.OnNotify($"Boxes saved in JSON!");
+                        return;
+                    case ConsoleKey.D2:
+                        _farm.Player.SavePlayer(2);
+                        _logger.OnNotify($"Boxes saved in XML!");
+                        return;
+                    case ConsoleKey.D3:
+                        _farm.Player.SavePlayer(3);
+                        _logger.OnNotify($"Game saved in XML!");
+                        return;
+                    case ConsoleKey.D4:
+                        _logger.OnNotify($"Game did't saved!");
+                        return;
+                }
             }
         }
     }

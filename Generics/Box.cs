@@ -1,52 +1,56 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
 
 namespace Generics
 {
-    public class Box<T> : IEnumerable where T : Plant
+    public class Box<T> where T : Plant
     {
-        private readonly List<T> _plants;
-        private int _seeds;
+
+        public List<T> Plants;
+
+        public int Seeds;
 
         public Box()
         {
-            _plants = new List<T>();
-            _seeds = 5;
+            Plants = new List<T>();
+            Seeds = 5;
         }
 
         public void UseSeed()
         {
-            _seeds -= 1;
+            Seeds -= 1;
         }
 
         public void BuySeeds()
         {
-            _seeds += 5;
+            Seeds += 5;
         }
 
         public int GetSeeds()
         {
-            return _seeds;
+            return Seeds;
         }
 
         public void ToTheBox(T plant)
         {
             if (Count() < 10)
-                _plants.Add(plant);
+                Plants.Add(plant);
             else
                 throw new BoxOverException(Config.ERRORTEXT);
         }
 
         public void Sell()
         {
-            _plants.Clear();
+            Plants.Clear();
         }
 
         public int GetScore()
         {
             var score = 0;
-            foreach (var plant in _plants)
+            foreach (var plant in Plants)
             {
                 score += plant.GetScore();
             }
@@ -56,12 +60,12 @@ namespace Generics
 
         public int Count()
         {
-            return _plants.Count;
+            return Plants.Count;
         }
 
         public void SortBox(Func<Plant, Plant, int> compare)
         {
-            if (_plants.Count > 1)
+            if (Plants.Count > 1)
             {
                 bool isSorted;
 
@@ -69,18 +73,16 @@ namespace Generics
                 {
                     isSorted = true;
 
-                    for (var i = 0; i < _plants.Count - 1; i++)
+                    for (var i = 0; i < Plants.Count - 1; i++)
                     {
-                        if (compare(_plants[i], _plants[i + 1]) > 0)
+                        if (compare(Plants[i], Plants[i + 1]) > 0)
                         {
-                            (_plants[i], _plants[i + 1]) = (_plants[i + 1], _plants[i]);
+                            (Plants[i], Plants[i + 1]) = (Plants[i + 1], Plants[i]);
                             isSorted = false;
                         }
                     }
                 } while (isSorted != true);
             }
         }
-
-        public IEnumerator GetEnumerator() => _plants.GetEnumerator();
     }
 }

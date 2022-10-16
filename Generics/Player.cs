@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Generics
 {
@@ -25,6 +26,69 @@ namespace Generics
             _logger.Notify += LoggerMethods.LogInConsole;
         }
 
+        public void SavePlayer(int choice)
+        {
+            switch (choice)
+            {
+                case 1:
+                    Json<Fruit> saveFruitJson = new Json<Fruit>();
+                    Json<Vegetable> saveVegetableJson = new Json<Vegetable>();
+                    Json<Berry> saveBerryJson = new Json<Berry>();
+            
+                    saveFruitJson.SerializeBox(FruitBox, Config.FRUIT_PATH);
+                    saveVegetableJson.SerializeBox(VegetableBox, Config.VEGETABLE_PATH);
+                    saveBerryJson.SerializeBox(BerryBox, Config.BERRY_PATH);
+                    break;
+                case 2:
+                    Xml<Fruit> saveFruitXml = new Xml<Fruit>();
+                    Xml<Vegetable> saveVegetableXml = new Xml<Vegetable>();
+                    Xml<Berry> saveBerryXml = new Xml<Berry>();
+                    
+                    saveFruitXml.SerializeBox(FruitBox, Config.XML_FRUIT_PATH);
+                    saveVegetableXml.SerializeBox(VegetableBox, Config.XML_VEGETABLE_PATH);
+                    saveBerryXml.SerializeBox(BerryBox, Config.XML_BERRY_PATH);
+                    break;
+                case 3:
+                    PlayerXml savePlayer = new PlayerXml();
+                    savePlayer.Serialize(this, Config.XML_PATH);
+                    break;
+
+            }
+        }
+        
+        public void LoadPlayer(int choice)
+        {
+            switch (choice)
+            {
+                case 1:
+                    Json<Fruit> loadFruitJson = new Json<Fruit>();
+                    Json<Vegetable> loadVegetableJson = new Json<Vegetable>();
+                    Json<Berry> loadBerryJson = new Json<Berry>();
+            
+                    FruitBox = loadFruitJson.DeserializeBox(Config.FRUIT_PATH);
+                    VegetableBox = loadVegetableJson.DeserializeBox(Config.VEGETABLE_PATH);
+                    BerryBox = loadBerryJson.DeserializeBox(Config.BERRY_PATH);
+                    break;
+                case 2:
+                    Xml<Fruit> loadFruitXml = new Xml<Fruit>();
+                    Xml<Vegetable> loadVegetableXml = new Xml<Vegetable>();
+                    Xml<Berry> loadBerryXml = new Xml<Berry>();
+                    
+                    FruitBox = loadFruitXml.DeserializeBox(Config.XML_FRUIT_PATH);
+                    VegetableBox = loadVegetableXml.DeserializeBox(Config.XML_VEGETABLE_PATH);
+                    BerryBox = loadBerryXml.DeserializeBox(Config.XML_BERRY_PATH);
+                    break;
+                case 3:
+                    PlayerXml loadPlayer = new PlayerXml();
+                    Player test = loadPlayer.Deserialize(Config.XML_PATH);
+                    this.Money = test.Money;
+                    this.FruitBox = test.FruitBox;
+                    this.VegetableBox = test.VegetableBox;
+                    this.BerryBox = test.BerryBox;
+                    break;
+            }
+        }
+
         public void MoveLeft()
         {
             if (X == 6 && Y == 1)
@@ -38,7 +102,7 @@ namespace Generics
             if ((X < 5) || (X == 5 && Y == 1) )
                 X++;
         }
-        
+
         public void MoveTop()
         {
             if (X == 5 && Y > 0)

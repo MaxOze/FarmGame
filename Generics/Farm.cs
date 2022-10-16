@@ -206,7 +206,7 @@ namespace Generics
             int y;
             var left = 206;
             var top = 31;
-            foreach (Fruit fruit in Player.FruitBox)
+            foreach (Fruit fruit in Player.FruitBox.Plants)
             {
                 Console.SetCursorPosition(left, ++top);
                 Console.Write(fruit.GetScore());
@@ -225,7 +225,7 @@ namespace Generics
 
             left = 214;
             top = 31;
-            foreach (Vegetable vegetable in Player.VegetableBox)
+            foreach (Vegetable vegetable in Player.VegetableBox.Plants)
             {
                 Console.SetCursorPosition(left, ++top);
                 Console.Write(vegetable.GetScore());
@@ -244,7 +244,7 @@ namespace Generics
             
             left = 222;
             top = 31;
-            foreach (Berry berry in Player.BerryBox)
+            foreach (Berry berry in Player.BerryBox.Plants)
             {
                 Console.SetCursorPosition(left, ++top);
                 Console.Write(berry.GetScore());
@@ -267,7 +267,7 @@ namespace Generics
             int y;
             var left = 206;
             var top = 31;
-            foreach (Fruit fruit in Player.FruitBox)
+            foreach (Fruit fruit in Player.FruitBox.Plants)
             {
                 Console.SetCursorPosition(left, ++top);
                 Console.Write(fruit.GetOk());
@@ -286,7 +286,7 @@ namespace Generics
 
             left = 214;
             top = 31;
-            foreach (Vegetable vegetable in Player.VegetableBox)
+            foreach (Vegetable vegetable in Player.VegetableBox.Plants)
             {
                 Console.SetCursorPosition(left, ++top);
                 Console.Write(vegetable.GetOk());
@@ -305,7 +305,7 @@ namespace Generics
             
             left = 222;
             top = 31;
-            foreach (Berry berry in Player.BerryBox)
+            foreach (Berry berry in Player.BerryBox.Plants)
             {
                 Console.SetCursorPosition(left, ++top);
                 Console.Write(berry.GetOk());
