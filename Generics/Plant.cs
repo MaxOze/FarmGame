@@ -4,12 +4,12 @@ namespace Generics
 {
     public abstract class Plant         // Абстрактный класс растения
     {
-        protected int Level;
-        protected int Score;
-        protected int IsOk;
-        protected bool IsReady;
-        protected const int ReadyLvl = 10;
-        protected int GrowLevel;
+        public int Level;
+        public int Score;
+        public int IsOk;
+        public bool IsReady;
+        public const int ReadyLvl = 10;
+        public int GrowLevel;
 
         protected Plant()
         {
@@ -166,23 +166,19 @@ namespace Generics
 
             if (Level > 0 && IsReady)
             {
-                if (Level > 2)
-                    Level -= 3;
-                else
-                    Level = 0;
                 if (IsOk > 10)
                     IsOk -= 10;
                 else
                     IsOk = 0;
             }
-            else if ((Level < ReadyLvl) && !IsReady)
-                Level += 3;
         }
 
         public override void Collect()
         {
             if (IsReady && IsOk > 0)
-                Score = Level;
+            {
+                Score = Level * IsOk / 100;
+            }
             else if (IsOk < 2)
                 Score = 0;
         }
