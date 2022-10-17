@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 
 namespace Generics
@@ -7,10 +8,13 @@ namespace Generics
     {
         private readonly Farm _farm;
         private readonly Logger _logger;
+        private Func<Plant, Plant, int> _sorting;
+        private bool _showOk;
 
         public Game(Farm farm)
         {
             _farm = farm;
+            _showOk = false;
             _logger = new Logger();
             _logger.Notify += LoggerMethods.LogInFile;
         }
@@ -25,38 +29,15 @@ namespace Generics
             _farm.ToConsole();
             _farm.Player.ToConsole();
             _farm.HarvestToConsole();
+            Sorting(_showOk);
             Console.SetCursorPosition(196, 2);
             Console.Write("День 0");
 
             var end = true;
-            var showScore = true;
             while (end)
             {
                 Clear();
                 ShowNextDay();
-                
-                Func<Plant, Plant, int> sorting;
-                if (showScore)
-                {
-                    Console.SetCursorPosition(204, 28);
-                    Console.Write("Количество урожая, шт"); 
-                    sorting = Plant.SortByScore;
-                    _farm.Player.FruitBox.SortBox(sorting);
-                    _farm.Player.VegetableBox.SortBox(sorting);
-                    _farm.Player.BerryBox.SortBox(sorting);
-                    _farm.ScoreToConsole();
-                }
-                else
-                {
-                    Console.SetCursorPosition(204, 28);
-                    Console.Write("  Качество урожая, %   ");
-                    sorting = Plant.SortByOk;
-                    _farm.Player.FruitBox.SortBox(sorting);
-                    _farm.Player.VegetableBox.SortBox(sorting);
-                    _farm.Player.BerryBox.SortBox(sorting);
-                    _farm.OkToConsole();
-                }
-
 
                 var key = Console.ReadKey(true).Key;
 
@@ -81,10 +62,20 @@ namespace Generics
                         _farm.ToConsole();
                         break;
                     case ConsoleKey.S:
-                        showScore = true;
+                        _showOk = false;
+                        Sorting(_showOk);
                         break;
                     case ConsoleKey.O:
-                        showScore = false;
+                        _showOk = true;
+                        Sorting(_showOk);
+                        break;
+                    case ConsoleKey.L:
+                        if (_logger.Count() == 1)
+                            _logger.Notify += LoggerMethods.LogInConsole;
+                        else
+                        {
+                            _logger.Notify -= LoggerMethods.LogInConsole;
+                        }
                         break;
                     case ConsoleKey.Q:
                         end = false;
@@ -242,22 +233,22 @@ namespace Generics
                                         switch (choice)
                                         {
                                             case 1:
-                                                _farm.PlantField(new Fruit(), _farm.Player.X, _farm.Player.Y);
-                                                _logger.OnNotify($"Player plant fruit in the field ({_farm.Player.X},{_farm.Player.Y})");
+                                                if (_farm.PlantField(new Fruit(), _farm.Player.X, _farm.Player.Y))
+                                                    _logger.OnNotify($"Player plant fruit in the field ({_farm.Player.X},{_farm.Player.Y})");
                                                 Clear();
                                                 close = false;
                                                 close1 = false;
                                                 break;
                                             case 2:
-                                                _farm.PlantField(new Vegetable(), _farm.Player.X, _farm.Player.Y);
-                                                _logger.OnNotify($"Player plant vegetable in the field ({_farm.Player.X},{_farm.Player.Y})");
+                                                if (_farm.PlantField(new Vegetable(), _farm.Player.X, _farm.Player.Y))
+                                                    _logger.OnNotify($"Player plant vegetable in the field ({_farm.Player.X},{_farm.Player.Y})");
                                                 Clear();
                                                 close = false;
                                                 close1 = false;
                                                 break;
                                             case 3:
-                                                _farm.PlantField(new Berry(), _farm.Player.X, _farm.Player.Y);
-                                                _logger.OnNotify($"Player plant berry in the field ({_farm.Player.X},{_farm.Player.Y})");
+                                                if (_farm.PlantField(new Berry(), _farm.Player.X, _farm.Player.Y))
+                                                    _logger.OnNotify($"Player plant berry in the field ({_farm.Player.X},{_farm.Player.Y})");
                                                 Clear();
                                                 close = false;
                                                 close1 = false;
@@ -354,6 +345,7 @@ namespace Generics
                                                 Clear();
                                                 close = false;
                                                 close1 = false;
+                                                Sorting(_showOk);
                                                 break;
                                             case 2:
                                                 Clear();
@@ -482,6 +474,7 @@ namespace Generics
                             case 2:
                                 _farm.Player.SellHarvest();
                                 _farm.HarvestToConsole();
+                                Sorting(_showOk);
                                 choice = 0;
                                 break;
                             case 3:
@@ -617,6 +610,76 @@ namespace Generics
                 }
             }
             _farm.HarvestToConsole();
+        }
+
+        private void Sorting(bool ok)
+        {
+            if (!ok)
+            {
+                try
+                {
+                    Console.SetCursorPosition(204, 28);
+                    Console.Write("Количество урожая, шт");
+                    _sorting = Plant.SortByScore;
+
+                    var loggingTask = Task.Factory.StartNew(() =>
+                    {
+                        _logger.OnNotify($"Sort started!");
+                        var sortingTask = Task.Factory.StartNew(async () =>
+                        {
+                            await _farm.Player.FruitBox.SortBoxAsync(_sorting);
+                            await _farm.Player.VegetableBox.SortBoxAsync(_sorting);
+                            await _farm.Player.BerryBox.SortBoxAsync(_sorting);
+                            // _logger.OnNotify($"Sort ended with " + 
+                            //                  $"{_farm.Player.FruitBox.Plants.Count + _farm.Player.VegetableBox.Plants.Count + _farm.Player.BerryBox.Plants.Count} elements!");
+                        }, TaskCreationOptions.AttachedToParent); // Задача логирования закончится только когда закончится сортировка!
+                        sortingTask.Wait();
+                        _logger.OnNotify($"Sort ended with " + 
+                                         $"{_farm.Player.FruitBox.Plants.Count + _farm.Player.VegetableBox.Plants.Count + _farm.Player.BerryBox.Plants.Count} elements!");
+                        //_logger.OnNotify($"loggingTaks wait for sortingTask");
+                    });
+
+                    loggingTask.Wait();
+                    _farm.ScoreToConsole();
+                }
+                catch (Exception ex)
+                {
+                    // :)
+                }
+            }
+            else
+            {
+                try
+                {
+                    Console.SetCursorPosition(204, 28);
+                    Console.Write("  Качество урожая, %   ");
+                    _sorting = Plant.SortByOk;
+                    
+                    var loggingTask = Task.Factory.StartNew(() =>
+                    {
+                        _logger.OnNotify($"Sort started!");
+                        var sortingTask = Task.Factory.StartNew(async () =>
+                        {
+                            await _farm.Player.FruitBox.SortBoxAsync(_sorting);
+                            await _farm.Player.VegetableBox.SortBoxAsync(_sorting);
+                            await _farm.Player.BerryBox.SortBoxAsync(_sorting);
+                            // _logger.OnNotify($"Sort ended with " + 
+                            //                  $"{_farm.Player.FruitBox.Plants.Count + _farm.Player.VegetableBox.Plants.Count + _farm.Player.BerryBox.Plants.Count} elements!");
+                        }, TaskCreationOptions.AttachedToParent); // Задача логирования закончится только когда закончится сортировка!
+                        sortingTask.Wait();
+                        _logger.OnNotify($"Sort ended with " + 
+                                         $"{_farm.Player.FruitBox.Plants.Count + _farm.Player.VegetableBox.Plants.Count + _farm.Player.BerryBox.Plants.Count} elements!");
+                        //_logger.OnNotify($"loggingTaks wait for sortingTask");
+                    });
+
+                    loggingTask.Wait();
+                    _farm.OkToConsole();
+                }
+                catch (Exception ex)
+                {
+                    // :)
+                }
+            }
         }
 
         private void ShowNextDay()
