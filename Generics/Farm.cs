@@ -67,7 +67,7 @@ namespace Generics
             return 1;
         }
 
-        public void PlantField(Plant plant, int x, int y)
+        public bool PlantField(Plant plant, int x, int y)
         {
             var selectedField = Fields[x, y];
 
@@ -78,21 +78,33 @@ namespace Generics
                 if (what == typeof(Fruit))
                 {
                     if (Player.FruitBox.GetSeeds() > 0)
+                    {
                         Player.FruitBox.UseSeed();
+                        selectedField.Change(plant);
+                        return true;
+                    }
                 }
                 else if (what == typeof(Vegetable))
                 {
                     if (Player.VegetableBox.GetSeeds() > 0)
+                    {
                         Player.VegetableBox.UseSeed();
+                        selectedField.Change(plant);
+                        return true;
+                    }
                 }
                 else if (what == typeof(Berry))
                 {
                     if (Player.BerryBox.GetSeeds() > 0)
+                    {
                         Player.BerryBox.UseSeed();
+                        selectedField.Change(plant);
+                        return true;
+                    }
                 }
-
-                selectedField.Change(plant);
             }
+
+            return false;
         }
 
         public void CollectField(int x, int y)
@@ -120,7 +132,7 @@ namespace Generics
 
             if (check)
             {
-                _logger.OnNotify($"Player collect {selectedField.ToString()}");
+                _logger.OnNotify($"Player collect {selectedField}");
                 selectedField.ToEmpty();
             }
         }
