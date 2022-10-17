@@ -10,6 +10,13 @@ namespace Generics
               {
                      Notify?.Invoke($"[{DateTime.Now:G}] >> " + message);
               }
+
+              public int Count()
+              {
+                     if (Notify != null) 
+                            return Notify.GetInvocationList().Length;
+                     return 0;
+              }
        }
 }
 

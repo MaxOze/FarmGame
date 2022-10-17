@@ -5,7 +5,7 @@ namespace Generics
 {
     public class LoggerMethods
     {
-        static int _pos = 2;
+        public static int Pos = 2;
 
         public static void LogInFile(string message)
         {
@@ -25,15 +25,11 @@ namespace Generics
 
         public static void LogInConsole(string message)
         {
-            if (_pos > 55)
+            if (Pos > 51)
             {
-                _pos = 2;
-                Console.SetCursorPosition(3, _pos);
+                Pos = 2;
+                Console.SetCursorPosition(3, Pos);
                 Console.Write("                                                                    \n" +
-                              "//                                                                    \n" +
-                              "//                                                                    \n" +
-                              "//                                                                    \n" +
-                              "//                                                                    \n" +
                               "//                                                                    \n" +
                               "//                                                                    \n" +
                               "//                                                                    \n" +
@@ -85,9 +81,9 @@ namespace Generics
                               "//                                                                    \n");
             }
 
-            Console.SetCursorPosition(3,_pos);
+            Console.SetCursorPosition(3,Pos);
             Console.WriteLine(message);
-            _pos++;
+            Pos++;
         }
     }
 }
