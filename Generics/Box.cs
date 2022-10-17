@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 
 namespace Generics
@@ -63,7 +64,7 @@ namespace Generics
             return Plants.Count;
         }
 
-        public void SortBox(Func<Plant, Plant, int> compare)
+        public async Task SortBoxAsync(Func<Plant, Plant, int> compare)
         {
             if (Plants.Count > 1)
             {
